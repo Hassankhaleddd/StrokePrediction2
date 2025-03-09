@@ -1,0 +1,6 @@
+@StrokePrediction_HostAddress = http://localhost:5116
+
+GET {{StrokePrediction_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
