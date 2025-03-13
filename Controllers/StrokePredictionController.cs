@@ -1,7 +1,10 @@
-﻿namespace StrokePrediction.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace StrokePrediction.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StrokePredictionController : ControllerBase
     {
         [HttpPost]
@@ -20,7 +23,7 @@
                 }
                 return ValidationProblem(modelstate);
             }
-            // هنا يمكنك إضافة الكود اللازم للتنبؤ بالسكتة الدماغية
+            
             return Ok();
         }
     }
