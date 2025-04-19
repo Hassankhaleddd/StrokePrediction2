@@ -10,7 +10,7 @@ namespace StrokeButTest.Controllers
     public class ChatBotController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = "AIzaSyD6HYrV5S5c5eLClYYJ8ywItf2gqQNuQnM"; // استبدلها بمفتاحك الحقيقي
+        private readonly string _apiKey = "AIzaSyD6HYrV5S5c5eLClYYJ8ywItf2gqQNuQnM"; 
         private readonly string _endpoint;
 
         public ChatBotController()
