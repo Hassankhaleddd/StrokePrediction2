@@ -49,12 +49,40 @@ namespace StrokePrediction.Controllers
 
             var result = reminders.Select(r => new
             {
+                r.Id,
                 r.Name,
                 Time = r.Time.ToString(@"hh\:mm"),
                 r.IsDaily
             });
 
             return Ok(result);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateReminder(int id,[FromBody] ReminderDto dto)
+        {
+            string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var oldReminder = await _context.Medications
+        .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+            if (oldReminder == null)
+                return NotFound("Reminder not found");
+            oldReminder.Name = dto.MedicineName;
+            oldReminder.Time = TimeSpan.Parse(dto.Time);
+            oldReminder.IsDaily = dto.IsDaily; 
+
+            await _context.SaveChangesAsync();
+            return Ok("Reminder updated successfully");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReminders(int id)
+        {
+            string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var oldReminder = await _context.Medications
+        .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+            if (oldReminder == null)
+                return NotFound("Reminder not found");
+            _context.Medications.Remove(oldReminder);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
