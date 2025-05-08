@@ -7,7 +7,8 @@
         {
         }
 
-        public DbSet<LabTest> LabTests { get; set; }  
+        public DbSet<LabTest> LabTests { get; set; }
+        public DbSet<Medication> Medications { get; set; }
     }
 
 }
