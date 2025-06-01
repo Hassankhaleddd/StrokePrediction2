@@ -27,7 +27,7 @@ namespace StrokePrediction.Controllers
             var reminder = new Medication
             {
                 UserId = userId,
-                Name = dto.MedicineName,
+                Name = dto.Name,
                 Time = TimeSpan.Parse(dto.Time),
                 IsDaily = dto.IsDaily,
                 CreatedAt = DateTime.UtcNow
@@ -36,7 +36,7 @@ namespace StrokePrediction.Controllers
             _context.Medications.Add(reminder);
             await _context.SaveChangesAsync();
 
-            return Ok("Reminder added successfully");
+            return Ok("Reminder was added successfully");
         }
 
         [HttpGet]
@@ -57,6 +57,27 @@ namespace StrokePrediction.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetReminderById(int id)
+        {
+            string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var reminder = await _context.Medications
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+
+            if (reminder == null)
+                return NotFound("Reminder not found");
+
+            var result = new
+            {
+                reminder.Id,
+                reminder.Name,
+                Time = reminder.Time.ToString(@"hh\:mm"),
+                reminder.IsDaily
+            };
+
+            return Ok(result);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReminder(int id,[FromBody] ReminderDto dto)
         {
@@ -65,7 +86,7 @@ namespace StrokePrediction.Controllers
         .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
             if (oldReminder == null)
                 return NotFound("Reminder not found");
-            oldReminder.Name = dto.MedicineName;
+            oldReminder.Name = dto.Name;
             oldReminder.Time = TimeSpan.Parse(dto.Time);
             oldReminder.IsDaily = dto.IsDaily; 
 
@@ -82,7 +103,7 @@ namespace StrokePrediction.Controllers
                 return NotFound("Reminder not found");
             _context.Medications.Remove(oldReminder);
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok("Reminder was deleted successfully");
         }
     }
 }
